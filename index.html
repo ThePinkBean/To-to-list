@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To-Do List</title>
+    <style>
+      /* 스타일링 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      #list {
+        margin: 0 auto;
+        width: 60%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px #888;
+      }
+      input[type="text"] {
+        width: 70%;
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #3e8e41;
+      }
+      .delete {
+        background-color: #f44336;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        float: right;
+      }
+      .delete:hover {
+        background-color: #e53935;
+      }
+      .task {
+        text-decoration: none;
+        color: #333;
+        display: block;
+        padding: 10px;
+        border-radius: 3px;
+        border-bottom: 1px solid #ccc;
+        transition: all 0.2s;
+      }
+      .task:hover {
+        background-color: #f2f2f2;
+      }
+      .completed {
+        text-decoration: line-through;
+        color: #aaa;
+      }
+      .trash {
+        color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>To-Do List</h1>
+    <div id="list">
+      <input type="text" id="task" placeholder="Add task...">
+      <button id="addBtn">+</button>
+      <ul id="taskList"></ul>
+    </div>
+
+    <script>
+      const taskInput = document.querySelector("#task");
+      const addBtn = document.querySelector("#addBtn");
+      const taskList = document.querySelector("#taskList");
+
+      // 할 일 추가 함수
+      function addTask() {
+        if (taskInput.value === "") {
+          alert("Please enter a task");
+          return;
+        }
+
+        const task = document.createElement("li");
+        task.innerText = taskInput.value;
+
+        // 클릭하면 완료 표시
+        task.addEventListener("click", completeTask);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.className = "delete";
+
+        // 클릭하면 삭제 및 휴지통 추가
+        deleteBtn.addEventListener("click", function() {
+          task.remove();
+          addToTrash(task.innerText);
+        });
+
+        task.appendChild(deleteBtn);
+        taskList.appendChild(task);
+
+        taskInput.value = "";
+      }
+
+      // 할 일 완료 함수
+      function completeTask() {
+        this.classList.toggle("completed");
+      }
+
+      // 휴지통에 추가 함수
+        function addToTrash(task) {
+        const trash = document.querySelector("#trashList");
+        const trashItem = document.createElement("li");
+        trashItem.innerText = task;
+        trashItem.className = "trash";
+        trash.appendChild(trashItem);
+      }
+
+      // 초기화 함수
+      function clearAll() {
+        const taskItems = document.querySelectorAll(".task");
+        taskItems.forEach(function(item) {
+          item.remove();
+          addToTrash(item.innerText);
+        });
+      }
+
+      // 이벤트 리스너 추가
+      addBtn.addEventListener("click", addTask);
+      taskInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          addTask();
+        }
+      });
+
+    </script>
+
+    <!-- 휴지통 -->
+    <h2>Trash</h2>
+    <ul id="trashList"></ul>
+  </body>
+</html>
